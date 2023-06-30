@@ -12,13 +12,23 @@ namespace HomeWork
         /// <summary>
         /// Обозначение переменных
         /// </summary>
-        private int id;
-        private DateTime dateTimeNow;
-        private string fio;
-        private int age;
-        private int height;
-        private DateTime dateOfBirth;
-        private string placeOfBirth;
+        /// <summary>
+        /// Структура сотрудника
+        /// </summary>
+        /// <param name="id">Номер в списке</param>
+        /// <param name="dateTimeNow">Дата добавления</param>
+        /// <param name="fio">Имя</param>
+        /// <param name="age">Фамилия</param>
+        /// <param name="height">Отчество</param>
+        /// <param name="dateOfBirth">Рост</param>
+        /// <param name="placeOfBirth">Возраст</param>
+        //private int id;
+        //private DateTime dateTimeNow;
+        //private string fio;
+        //private int age;
+        //private int height;
+        //private DateTime dateOfBirth;
+        //private string placeOfBirth;
 
         /// <summary>
         /// Обозначение доступов к параметрам
@@ -36,9 +46,9 @@ namespace HomeWork
         /// Метод позволяющий вывести строку на консоль
         /// </summary>
         /// <param name="w"></param>
-        public void Print(Workers w)
+        private void Print(Workers w)
         {
-            Console.WriteLine($"{Convert.ToString(w.Id)} {Convert.ToString(w.DateTimeNow)} {w.Fio} {Convert.ToString(w.Age)} {Convert.ToString(w.Heiht)} {Convert.ToString(w.DateOfBirth)} {w.PlaceOfBirth}");
+            Console.WriteLine($"{Convert.ToString(w.Id)} {Convert.ToString(w.DateTimeNow)} {w.Fio} {Convert.ToString(w.Age)} {Convert.ToString(w.Height)} {Convert.ToString(w.DateOfBirth)} {w.PlaceOfBirth}");
         }
 
         /// <summary>
@@ -69,7 +79,7 @@ namespace HomeWork
                         worker.Age = int.Parse(words[i]);
                         break;
                     case 5:
-                        worker.Heiht = int.Parse(words[i]);
+                        worker.Height = int.Parse(words[i]);
                         break;
                     case 6:
                         worker.DateOfBirth = DateTime.Parse(words[i]);
@@ -106,7 +116,7 @@ namespace HomeWork
         /// Метод, позволяющий загрузить данные из файла в структуру
         /// </summary>
         /// <returns></returns>
-        public Workers [] pushOfData()
+        private Workers [] pushOfData()
         {
             if (Exsistance())
             {
@@ -130,9 +140,9 @@ namespace HomeWork
         /// <param name="w"></param>
         /// <param name="startArray"></param>
         /// <param name="endArray"></param>
-        public void ReadTheText (Workers [] w, int startArray = -1, int endArray = -1)
+        public void ReadTheText ( int startArray = -1, int endArray = -1)
         {
-            w = pushOfData();
+            Workers[] w = pushOfData();
             if (startArray == -1 || endArray == -1)
             {
                 for (int i = 0; i < w.Length; i++)
@@ -217,8 +227,9 @@ namespace HomeWork
         /// <param name="worker"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        private Workers NewWorker(Workers worker, int id)
+        private Workers NewWorker( int id)
         {
+            Workers worker = new Workers();
             worker.Id = id;
             worker.DateTimeNow = DateTime.Now;
                        
@@ -235,6 +246,64 @@ namespace HomeWork
             return worker;
         }
 
+        /// <summary>
+        /// Метод выдающий айди строки
+        /// </summary>
+        /// <returns></returns>
+         private int FindID()
+        {
+            if (Exsistance())
+            {
+                string[] listOfClients = File.ReadAllLines(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt");
 
+                 return listOfClients.Length + 1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+
+        public void DeleteElement(int index)
+        {
+            Workers[] allStuff = pushOfData();
+            File.Delete(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt");
+            for (int i = 0; i < allStuff.Length-1; i++)
+            {
+                if (i < index-1)
+                {
+                    AddTheString(allStuff[i]);
+                }
+                else if (i == index-1)
+                {
+                    continue;
+                }
+                else if (i > index - 1)
+                {
+                    allStuff[i].Id = i - 1;
+                    AddTheString(allStuff[i]);
+                }
+            }
+            
+        }
+
+        private void AddTheString( Workers newWorker)
+        {
+            string newString = $"{Convert.ToString(newWorker.Id)} {Convert.ToString(newWorker.DateTimeNow)} {newWorker.Fio} {Convert.ToString(newWorker.Age)} {Convert.ToString(newWorker.Height)} {Convert.ToString(newWorker.DateOfBirth)} {newWorker.PlaceOfBirth}";
+            File.AppendAllText(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt", newString + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Метод позволяющий добавить строку в файл
+        /// </summary>
+        public void AddNewString()
+        {
+            
+            int id = FindID();
+            Workers newWorker = NewWorker(id);
+            AddTheString(newWorker);
+
+        }
     }
 }

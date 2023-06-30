@@ -7,42 +7,41 @@ namespace HomeWork
 {
     class Program
     {
-       
-
-        
-
-        static void AddNewString()
-        {
-            int count;
-            FileInfo list = new FileInfo(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt");
-            if (list.Exists)
-            {
-                string[] listOfClients = File.ReadAllLines(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt");
-                
-                count = listOfClients.Length + 1;
-            }
-            else
-            {
-                count = 1;
-            }
-
-            string newString = NewString(count);
-
-            File.AppendAllText(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt", newString + Environment.NewLine);
-        }
-
-        
+                      
+               
         static void Main(string[] args)
         {
-            Console.WriteLine("Добро пожаловать в список сотрудников. Что вы хотите сделать: Прочитать список(1) или добавить новую строку(2)?");
+            Workers w = new Workers();
+            Console.WriteLine("Добро пожаловать в список сотрудников. Что вы хотите сделать: Прочитать список(1) или добавить новую строку(2), удалить ненужную строку (3)?");
             int count = int.Parse(Console.ReadLine());
             switch (count)
             {
                 case 1:
-                    ReadListOfClients();
+                    Console.WriteLine("Вы хотите прочитать файл целиком(1), какую-то конкретную строку(2), Какой-то диапазон значений?");
+                    switch (Console.ReadLine())
+                    {
+                        case "1":
+                            w.ReadTheText();
+                            break;
+                        case "2":
+                            Console.WriteLine("Выберете номер строки, которую хотите прочитать.");
+                            w.ReadTheText(int.Parse(Console.ReadLine()));
+                            break;
+                        case "3":
+                            Console.WriteLine("Выберете номер начальной и конечной строки диапозона.");
+                            w.ReadTheText(int.Parse(Console.ReadLine()), int.Parse(Console.ReadLine()));
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case 2:
-                    AddNewString();
+                    w.AddNewString();
+                    break;
+                case 3:
+                    Console.WriteLine("Введите номер строки которую хотите удалить");
+                    int countOfString = int.Parse(Console.ReadLine());
+                    w.DeleteElement(countOfString);
                     break;
                 default:
                     break;
