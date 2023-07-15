@@ -66,27 +66,27 @@ namespace HomeWork
             {
                 switch (i)
                 {
-                    case 1:
+                    case 0:
                         worker.Id = int.Parse(words[i]);
-                        break;
-                    case 2:
+                        continue;
+                    case 1:
                         worker.DateTimeNow = DateTime.Parse(words[i]);
-                        break;
-                    case 3:
+                        continue;
+                    case 2:
                         worker.Fio = words[i];
-                        break;
-                    case 4:
+                        continue;
+                    case 3:
                         worker.Age = int.Parse(words[i]);
-                        break;
-                    case 5:
+                        continue;
+                    case 4:
                         worker.Height = int.Parse(words[i]);
-                        break;
-                    case 6:
+                        continue;
+                    case 5:
                         worker.DateOfBirth = DateTime.Parse(words[i]);
-                        break;
-                    case 7:
+                        continue;
+                    case 6:
                         worker.PlaceOfBirth = words[i];
-                        break;
+                        continue;
                     default:
                         break;
                 }
@@ -116,7 +116,7 @@ namespace HomeWork
         /// Метод, позволяющий загрузить данные из файла в структуру
         /// </summary>
         /// <returns></returns>
-        private Workers [] pushOfData()
+        private Workers [] PushOfData()
         {
             if (Exsistance())
             {
@@ -134,6 +134,22 @@ namespace HomeWork
             }
         }
 
+        public void ReadTheText(DateTime date1, DateTime date2)
+        {
+            Workers[] w = pushOfData();
+            for (int i = 0; i < w.Length; i++)
+            {
+                if (w[i].DateTimeNow >= date1 || w[i].DateTimeNow <= date2)
+                {
+                    Print(w[i]);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+
         /// <summary>
         /// Метод позволяющий читать файл целиком, конкретный индекс или диапозон данных по индексу
         /// </summary>
@@ -142,7 +158,7 @@ namespace HomeWork
         /// <param name="endArray"></param>
         public void ReadTheText ( int startArray = -1, int endArray = -1)
         {
-            Workers[] w = pushOfData();
+            Workers[] w = PushOfData();
             if (startArray == -1 || endArray == -1)
             {
                 for (int i = 0; i < w.Length; i++)
