@@ -58,8 +58,9 @@ namespace HomeWork
         /// <param name="count"></param>
         /// <param name="worker"></param>
         /// <returns></returns>
-        private Workers Words(string allTextInLines, Workers worker)
+        private Workers Words(string allTextInLines)
         {
+            Workers worker = new Workers();
 
             string[] words = allTextInLines.Split('#');
             for (int i = 0; i < words.Length; i++)
@@ -116,7 +117,7 @@ namespace HomeWork
         /// Метод, позволяющий загрузить данные из файла в структуру
         /// </summary>
         /// <returns></returns>
-        private Workers [] PushOfData()
+        public Workers [] PushOfData()
         {
             if (Exsistance())
             {
@@ -124,7 +125,7 @@ namespace HomeWork
                 Workers[] workers = new Workers[listOfString.Length];
                 for (int i = 0; i < listOfString.Length; i++)
                 {
-                    Words(listOfString[i], workers[i]);
+                    workers[i] = Words(listOfString[i]);
                 }
                 return workers;
             }
@@ -134,12 +135,43 @@ namespace HomeWork
             }
         }
 
+        /// <summary>
+        /// Метод позволяющий читать диапозон данных по id
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="startArray"></param>
+        /// <param name="endArray"></param>
+        public void ReadTheText(int startArray, int endArray)
+        {
+            Workers[] w = PushOfData();
+            for (int i = 0; i < endArray; i++)
+            {
+                if (w[i].Id >= startArray)
+                {
+                    Print(w[i]);
+                }
+                else if (w[i].Id <= startArray)
+                {
+                    continue;
+                }else
+                {
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Метод позволяющий читать диапозон данных по дате
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="startArray"></param>
+        /// <param name="endArray"></param>
         public void ReadTheText(DateTime date1, DateTime date2)
         {
-            Workers[] w = pushOfData();
+            Workers[] w = PushOfData();
             for (int i = 0; i < w.Length; i++)
             {
-                if (w[i].DateTimeNow >= date1 || w[i].DateTimeNow <= date2)
+                if (w[i].DateTimeNow >= date1 && w[i].DateTimeNow <= date2)
                 {
                     Print(w[i]);
                 }
@@ -149,39 +181,34 @@ namespace HomeWork
                 }
             }
         }
-
+      
         /// <summary>
-        /// Метод позволяющий читать файл целиком, конкретный индекс или диапозон данных по индексу
+        /// Метод позволяющий читать конкретный индекс
         /// </summary>
         /// <param name="w"></param>
         /// <param name="startArray"></param>
         /// <param name="endArray"></param>
-        public void ReadTheText ( int startArray = -1, int endArray = -1)
+        public void ReadTheText(int index)
         {
             Workers[] w = PushOfData();
-            if (startArray == -1 || endArray == -1)
-            {
-                for (int i = 0; i < w.Length; i++)
+            Print(w[index-1]);
+
+        }
+
+        /// <summary>
+        /// Метод позволяющий читать файл целиком
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="startArray"></param>
+        /// <param name="endArray"></param>
+        public void ReadTheText ( )
+        {
+            Workers[] w = PushOfData();
+              for (int i = 0; i < w.Length; i++)
                 {
                     Print(w[i]);
                 } 
-            }
-            else if (endArray == -1 || startArray-1>= 0 || startArray - 1 < w.Length)
-            {
-                Print(w[startArray]);
-            }
-            else if (startArray - 1 >= 0 || startArray - 1 < w.Length|| endArray - 1 >= 0 || endArray - 1 < w.Length || endArray > startArray)
-            {
-                for (int i = startArray - 1; i < endArray-1; i++)
-                {
-                    Print(w[i]);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Вы допустили какую-то ошибку при вводе параметров - попробуйте еще раз.");
-            }
-
+           
         }
 
         //public void ReadListOfClients()
@@ -256,6 +283,7 @@ namespace HomeWork
             Console.WriteLine("Введите: Рост в см.");
             worker.Height = int.Parse(Console.ReadLine());
             Console.WriteLine("Введите: дата рождения.");
+            worker.DateOfBirth = DateTime.Parse(Console.ReadLine());
             Console.WriteLine("Введите: место рождения");
             worker.PlaceOfBirth = Console.ReadLine();
             
@@ -283,9 +311,9 @@ namespace HomeWork
 
         public void DeleteElement(int index)
         {
-            Workers[] allStuff = pushOfData();
+            Workers[] allStuff = PushOfData();
             File.Delete(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt");
-            for (int i = 0; i < allStuff.Length-1; i++)
+            for (int i = 0; i <= allStuff.Length-1; i++)
             {
                 if (i < index-1)
                 {
@@ -297,8 +325,8 @@ namespace HomeWork
                 }
                 else if (i > index - 1)
                 {
-                    allStuff[i].Id = i - 1;
-                    AddTheString(allStuff[i]);
+                    allStuff[i-1].Id = i;
+                    AddTheString(allStuff[i-1]);
                 }
             }
             
@@ -306,7 +334,7 @@ namespace HomeWork
 
         private void AddTheString( Workers newWorker)
         {
-            string newString = $"{Convert.ToString(newWorker.Id)} {Convert.ToString(newWorker.DateTimeNow)} {newWorker.Fio} {Convert.ToString(newWorker.Age)} {Convert.ToString(newWorker.Height)} {Convert.ToString(newWorker.DateOfBirth)} {newWorker.PlaceOfBirth}";
+            string newString = $"{Convert.ToString(newWorker.Id)}#{Convert.ToString(newWorker.DateTimeNow)}#{newWorker.Fio}#{Convert.ToString(newWorker.Age)}#{Convert.ToString(newWorker.Height)}#{Convert.ToString(newWorker.DateOfBirth)}#{newWorker.PlaceOfBirth}";
             File.AppendAllText(@"C:\Users\User\source\repos\HomeWork\ListOfClients.txt", newString + Environment.NewLine);
         }
 
